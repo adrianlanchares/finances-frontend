@@ -1,0 +1,11 @@
+services:
+  notion-finance:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: notion-finance
+    ports:
+      - "127.0.0.1:8501:8501"
+    restart: always
+    volumes:
+      - ~/.streamlit:/root/.streamlit
