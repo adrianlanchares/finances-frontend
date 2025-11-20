@@ -36,7 +36,7 @@ def dashboard():
             st.markdown(
                 f"""
                 <div style="background-color: #{color}; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                    <h3 style="color: white; margin: 0;">{account.capitalize()} Balance: ${balance:.2f}</h3>
+                    <h3 style="color: white; margin: 0; text-align: center;">{balance:.2f}€</h3>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -46,4 +46,4 @@ def dashboard():
     st.header("Plots")
     st.subheader("Total Money Over Time")
     fig = plot_total_money()
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
