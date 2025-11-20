@@ -45,5 +45,17 @@ def dashboard():
     # PLOTS ################################################################
     st.header("Plots")
     st.subheader("Total Money Over Time")
-    fig = plot_total_money()
+
+    # Add drop down menu to select filters (last week, last month, last year, all time)
+    filter_option = st.selectbox(
+        "Select time range:",
+        ("all", "year", "month", "week"),
+        index=0,
+    )
+    filters = {
+        "date": filter_option,
+    }
+
+    fig = plot_total_money(filters)
+
     st.plotly_chart(fig, width="stretch")
