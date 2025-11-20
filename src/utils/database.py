@@ -8,6 +8,8 @@ from typing import Dict, Any, Optional
 dotenv.load_dotenv()
 BACKEND_URL = os.getenv("BACKEND_URL")
 SSL_CERT_PATH = os.getenv("SSL_CERT_PATH")
+if SSL_CERT_PATH is None:
+    SSL_CERT_PATH = True  # type: ignore
 
 
 def get_transaction(id: int) -> Dict[str, Any]:
