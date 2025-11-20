@@ -15,5 +15,5 @@ COPY . .
 EXPOSE 8501
 
 # Run app
-CMD ["uv", "run", "streamlit", "run", "notion_finance.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["uv", "run", "streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]
 
