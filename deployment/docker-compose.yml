@@ -1,11 +1,25 @@
 services:
-  notion-finance:
+  finances-frontend:
     build:
       context: ..
       dockerfile: deployment/Dockerfile
-    container_name: notion-finance
+
+    container_name: finances-frontend
+
+    environment:
+      BACKEND_URL: ${BACKEND_URL}
+
     ports:
       - "127.0.0.1:8501:8501"
-    restart: always
+
+    restart: unless-stopped
+
     volumes:
       - ~/.streamlit:/root/.streamlit
+
+    networks:
+      - finances
+
+ networks:
+  finances:
+    external: true
