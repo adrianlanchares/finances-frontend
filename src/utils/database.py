@@ -1,9 +1,13 @@
 import pandas as pd
-import requests
+import requests  # type: ignore
+import os
+import dotenv
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
-BACKEND_URL = "http://finances-backend:8008/transactions"
+dotenv.load_dotenv()
+BACKEND_URL = os.getenv("BACKEND_URL")
+SSL_CERT_PATH = os.getenv("SSL_CERT_PATH")
 
 
 def get_transaction(id: int) -> Dict[str, Any]:
@@ -15,12 +19,12 @@ def get_transaction(id: int) -> Dict[str, Any]:
     Returns:
         Dict[str, Any]: Dictionary containing transaction information
     """
-    response = requests.get(BACKEND_URL + f"/{id}")
+    response = requests.get(BACKEND_URL + f"/{id}", verify=SSL_CERT_PATH)  # type: ignore
 
     return response.json()
 
 
-def get_transaction_list(query_params: Dict[str, Any] = {}) -> pd.DataFrame:
+def get_transaction_list(query_params: Optional[Dict[str, Any]] = None) -> pd.DataFrame:
     """
     Gets all of the transactions' data
 
@@ -40,11 +44,13 @@ def get_transaction_list(query_params: Dict[str, Any] = {}) -> pd.DataFrame:
     Returns:
         List[Dict[str, Any]]: List of transactions
     """
-    url_params = "?"
-    for filter in query_params:
-        url_params += f"{filter}={query_params[filter]}&"
+    url_params = ""
+    if query_params is not None:
+        url_params += "?"
+        for filter in query_params:
+            url_params += f"{filter}={query_params[filter]}&"
 
-    response = requests.get(BACKEND_URL + url_params)
+    response = requests.get(BACKEND_URL + url_params, verify=SSL_CERT_PATH)  # type: ignore
 
     return pd.DataFrame(response.json())
 
@@ -58,7 +64,11 @@ def create_transaction(transaction: Dict[str, Any]) -> bool:
     Returns:
         bool: Whether the creation went OK or not.
     """
-    response = requests.post(BACKEND_URL + "/create/", transaction)
+    response = requests.post(
+        BACKEND_URL + "/create/",  # type: ignore
+        transaction,
+        verify=SSL_CERT_PATH,
+    )
 
     return True if response.status_code == 201 else False
 
@@ -70,6 +80,10 @@ def get_balance() -> Dict[str, int]:
     Returns:
         Dict[str, int]: Dictonary containing account: balance
     """
-    response = requests.get(BACKEND_URL + "/balance/")
+    balances = {"tarjeta": 0, "efectivo": 0, "ahorros": 0}
+    response = requests.get(BACKEND_URL + "/balance/", verify=SSL_CERT_PATH)  # type: ignore
 
-    return response.json()
+    for account in response.json():
+        balances[account] = response.json()[account]
+
+    return balances
