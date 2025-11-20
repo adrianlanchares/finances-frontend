@@ -7,7 +7,7 @@ from typing import Dict, Any
 
 
 def plot_total_money(filters: Dict[str, Any]) -> Figure:
-    """Plot the total money over time.
+    """Plot accumulated total money over time.
 
     Args:
         filters (Dict[str, Any]): Filters to apply to the plot
@@ -15,29 +15,21 @@ def plot_total_money(filters: Dict[str, Any]) -> Figure:
         Figure: Plotly figure object with the total money plot.
     """
 
-    transactions = get_transaction_list(filters)
+    transactions: pd.DataFrame = get_transaction_list(filters)
 
-    transactions["signed_amount"] = transactions.apply(
-        lambda row: row["amount"] if row["cashflow"] == "income" else -row["amount"],
-        axis=1,
-    )
-    transactions["accumulated"] = transactions["signed_amount"].cumsum()
+    transactions["accumulated"] = transactions["amount"].cumsum()
 
     # Make the same plot with Plotly
     fig = Figure()
     fig.add_trace(
         {
-            "x": transactions["date"],
+            "x": transactions["datetime"],
             "y": transactions["accumulated"],
             "mode": "lines+markers",
             "name": "Total Money",
             "marker": {"size": 1},
             "line": {"shape": "hv"},
         }
-    )
-
-    fig.update_layout(
-        margin=dict(t=0),
     )
 
     return fig
