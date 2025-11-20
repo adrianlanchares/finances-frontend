@@ -3,10 +3,10 @@ from plotly.graph_objects import Figure
 
 from src.utils.database import get_balance, get_transaction, get_transaction_list
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
-def plot_total_money(filters: Dict[str, Any]) -> Figure:
+def plot_total_money(filters: Optional[Dict[str, Any]] = None) -> Figure:
     """Plot accumulated total money over time.
 
     Args:
