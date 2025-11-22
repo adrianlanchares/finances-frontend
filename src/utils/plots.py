@@ -17,6 +17,7 @@ def plot_total_money(filters: Optional[Dict[str, Any]] = None) -> Figure:
 
     transactions: pd.DataFrame = get_transaction_list(filters)
 
+    transactions["amount"] = transactions["amount"].astype(float)
     transactions["accumulated"] = transactions["amount"].cumsum()
 
     # Make the same plot with Plotly
